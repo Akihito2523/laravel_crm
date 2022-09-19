@@ -7,16 +7,14 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Http\Requests\CrmRequest;
 
-class CrmController extends Controller
-{
+class CrmController extends Controller {
 
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index() {
         $crm = Crm::all();
         return view('crm.index')->with(compact('crm'));
     }
@@ -27,8 +25,7 @@ class CrmController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function create(Request $request)
-    {
+    public function create(Request $request) {
         // createメソッドにデータを送信するのでGET
         $method = 'GET';
         // (input type="search)のname属性で入力した値をzipcodeに代入
@@ -65,8 +62,7 @@ class CrmController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CrmRequest $request)
-    {
+    public function store(CrmRequest $request) {
         $crm = new Crm();
         $crm->fill($request->all());
         $crm->save();
@@ -79,8 +75,7 @@ class CrmController extends Controller
      * @param  \App\Models\Crm  $crm
      * @return \Illuminate\Http\Response
      */
-    public function show(Crm $crm)
-    {
+    public function show(Crm $crm) {
         return view('crm.show')->with(compact('crm'));
     }
 
@@ -90,8 +85,7 @@ class CrmController extends Controller
      * @param  \App\Models\Crm  $crm
      * @return \Illuminate\Http\Response
      */
-    public function edit(Crm $crm)
-    {
+    public function edit(Crm $crm) {
         return view('crm.edit')->with(compact('crm'));
     }
 
@@ -102,11 +96,18 @@ class CrmController extends Controller
      * @param  \App\Models\Crm  $crm
      * @return \Illuminate\Http\Response
      */
-    public function update(CrmRequest $request, $id)
-    {
-        $crm = new Crm();
-        $crm->fill($request->all());
+    public function update(CrmRequest $request, $id) {
+
+        $crm = Crm::find($id);
+        // 値の用意
+        $crm->name = $request->name;
+        $crm->email = $request->email;
+        $crm->zipcode = $request->zipcode;
+        $crm->address = $request->address;
+        $crm->tel = $request->tel;
+        // 保存
         $crm->save();
+
         return view('crm.show')->with(compact('crm'));
     }
 
@@ -116,15 +117,13 @@ class CrmController extends Controller
      * @param  \App\Models\Crm  $crm
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Crm $crm)
-    {
+    public function destroy(Crm $crm) {
         $crm->delete();
         return redirect('/crm');
     }
 
     // 自作メソッド
-    public function search()
-    {
+    public function search() {
         return view('crm.search');
     }
 }
